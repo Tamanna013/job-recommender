@@ -61,12 +61,10 @@ init_db()
 st.title("💼 Universal Job Scraper")
 st.write("Fetching the latest 10 roles across LinkedIn, Indeed, and more.")
 
-# Sidebar Credit Tracker
 with st.sidebar:
     st.header("API Status")
     st.metric("Free Credits Left", get_credits())
 
-# User Input
 col1, col2 = st.columns(2)
 with col1:
     role_input = st.text_input("Job Role", "Data Analyst")
@@ -84,15 +82,12 @@ if st.button("Search Top 10 Jobs"):
                     st.write(f"**Location:** {job.get('location')}")
                     st.write(f"**Posted via:** {job.get('via')}")
                     
-                    # Action button to get the specific Apply Link
                     if st.button("Reveal Apply Links & Description", key=job_id):
                         details = get_job_details(job_id)
                         
-                        # Show Description
                         st.markdown("### Description")
                         st.write(details.get("description", "No description available."))
                         
-                        # Show Apply Links
                         st.markdown("### Apply Here")
                         apply_options = details.get("apply_options", [])
                         if apply_options:
@@ -101,7 +96,6 @@ if st.button("Search Top 10 Jobs"):
                         else:
                             st.info("No direct apply links found.")
                             
-                    # Option to Save to SQL
                     if st.button("Save to My Pipeline", key=f"save_{job_id}"):
                         conn = sqlite3.connect(DB_NAME)
                         try:
@@ -118,7 +112,6 @@ if st.button("Search Top 10 Jobs"):
         else:
             st.warning("No jobs found. Try a different role.")
 
-# Dashboard for Saved Jobs
 st.divider()
 st.header("📋 My Saved Pipeline")
 conn = sqlite3.connect(DB_NAME)
@@ -128,4 +121,5 @@ conn.close()
 if not saved_df.empty:
     st.table(saved_df)
 else:
+
     st.write("Search and save jobs to see them here.")
